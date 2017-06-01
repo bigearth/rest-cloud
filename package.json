@@ -1,0 +1,9 @@
+{
+  "name": "rest-cloud",
+  "version": "0.1.1",
+  "description": "Clone's REST endpoints",
+  "main": "index.js",
+  "repository": "git@github.com:bigearth/rest-cloud.git",
+  "author": "Gabriel Cardona cgcardona@gmail.com",
+  "license": "GPLv2"
+}
