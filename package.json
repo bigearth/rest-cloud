@@ -1,15 +1,17 @@
 {
   "name": "rest-cloud",
-  "version": "0.1.1",
-  "description": "Clone's REST endpoints",
-  "main": "index.js",
-  "repository": "git@github.com:bigearth/rest-cloud.git",
-  "author": "Gabriel Cardona cgcardona@gmail.com",
-  "license": "GPLv2",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node ./bin/www"
   },
   "dependencies": {
-    "express": "^4.15.3"
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.8.1",
+    "serve-favicon": "~2.4.2"
   }
 }
