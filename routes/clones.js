@@ -14,10 +14,18 @@ router.get('/:id/mqtt', (req, res, next) => {
   let mqtt = require('mqtt');
   var client = mqtt.connect('mqtts://jqpcdchr:scRzM1YSc4kh@m13.cloudmqtt.com:10805');
   client.on('connect', function() {
-    client.publish('t1', new Date().toString(), function() {
-      client.end();
-      res.writeHead(204, { 'Connection': 'keep-alive' });
-      res.end();
+    // subscribe to a topic
+    client.subscribe('hello/world', function() {
+      // when a message arrives, do something with it
+      client.on('message', function(topic, message, packet) {
+        console.log("Received '" + message + "' on '" + topic + "'");
+      });
+    });
+
+    // publish a message to a topic
+    client.publish('hello/world', 'my message', function() {
+      console.log("Message is published");
+      client.end(); // Close the connection when published
     });
   });
 });
