@@ -5,7 +5,14 @@ mongoose.connect(process.env.MONGODB_URI);
 
 let db = mongoose.connection;
 let userSchema = mongoose.Schema({
-  name: String
+  name: {
+    type: String,
+    unique: true
+  },
+  email: {
+    type: String,
+    unique: true
+  }
 });
 
 userSchema.methods.foo = function () {
@@ -20,40 +27,55 @@ db.once('open', function() {});
 // display list of all users
 router.get('/', (req, res, next) => {
   User.find(function (err, users) {
-    if (err) return console.error(err);
-    res.send(users);
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(users);
+    }
   });
 });
 
 // create a new user
 router.post('/', (req, res, next) => {
-  let user = new User({ name: req.body.name });
+  let user = new User({
+    name: req.body.name,
+    email: req.body.email
+   });
   user.save(function (err, user) {
-    if (err) return console.error(err);
-    res.send(user);
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(user);
+    }
   });
 });
 
 // display a specific user
 router.get('/:id', (req, res, next) => {
   User.find({name: req.params.id}, function (err, user) {
-    if (err) return console.error(err);
-    res.send(user);
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(user);
+    }
   });
 });
 
 // update a specific user
 router.put('/:id', (req, res, next) => {
   User.findOne({'name': req.params.id}, function (err, user) {
-    if (err) return handleError(err);
-    if(user) {
-      user.name = req.body.name;
-      user.save(function (err, updatedUser) {
-        if (err) return handleError(err);
-        res.send(updatedUser);
-      });
+    if (err) {
+      res.send(err);
     } else {
-      res.send({error: 'no user w/ name: ' + req.params.id});
+      if(user) {
+        user.name = req.body.name;
+        user.save(function (err, updatedUser) {
+          if (err) return handleError(err);
+          res.send(updatedUser);
+        });
+      } else {
+        res.send({error: 'no user w/ name: ' + req.params.id});
+      }
     }
   });
 });
@@ -61,8 +83,11 @@ router.put('/:id', (req, res, next) => {
 // delete a specific user
 router.delete('/:id', (req, res, next) => {
   User.remove({ name: req.params.id }, function (err) {
-    if (err) return handleError(err);
-    res.send({success: req.params.id + ' has been deleted.'});
+    if (err) {
+      res.send(err);
+    } else {
+      res.send({success: req.params.id + ' has been deleted.'});
+    }
   });
 });
 
