@@ -49,12 +49,12 @@ router.get('/users/:id/clones/:id', (req, res, next) => {
 // update a specific clone for a user
 router.put('/users/:id/clones/:id', (req, res, next) => {
   res.send('PUT	/users/:id/clones/:id');
-}
+});
 
-// delete a specific user
+// delete a specific clone for a user
 router.delete('/users/:id/clones/:id', (req, res, next) => {
   res.send('DELETE /users/:id/clones/:id');
-}););
+});
 
 /* GET clones listing. */
 router.get('/mongo', (req, res, next) => {
