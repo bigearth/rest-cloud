@@ -6,6 +6,30 @@ router.get('/', (req, res, next) => {
   res.send('');
 });
 
+/* GET clones listing. */
+router.get('/mongo', (req, res, next) => {
+  let mongoose = require('mongoose');
+  mongoose.connect('mongodb://heroku_7vnbm5jl:ff0mfi48kbnm1o2v1s9qok0jci@ds015919.mlab.com:15919/heroku_7vnbm5jl');
+  let db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function() {
+    let cloneSchema = mongoose.Schema({
+        name: String
+    });
+    cloneSchema.methods.print = function () {
+      let gcode = 'G29';
+      console.log(gcode);
+    }
+
+    let Clone = mongoose.model('Clone', cloneSchema);
+    let c1a = new Clone({ name: 'c1a' });
+    c1a.save(function (err, c1a) {
+      if (err) return console.error(err);
+      c1a.print();
+    });
+  });
+});
+
 router.get('/:id/health-check', (req, res, next) => {
   res.send('healthy and happy');
 });
