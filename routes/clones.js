@@ -6,31 +6,6 @@ router.get('/', (req, res, next) => {
   res.send('');
 });
 
-// display list of all users
-router.get('/users', (req, res, next) => {
-  res.send('GET /users');
-});
-
-// create a new user
-router.post('/users', (req, res, next) => {
-  res.send('POST /users');
-});
-
-// display a specific user
-router.get('/users:id', (req, res, next) => {
-  res.send('GET	/users/:id');
-});
-
-// update a specific user
-router.put('/users:id', (req, res, next) => {
-  res.send('PUT	/users/:id');
-});
-
-// delete a specific user
-router.delete('/users:id', (req, res, next) => {
-  res.send('DELETE /users/:id');
-});
-
 // display a list of all clones for a user
 router.get('/users/:id/clones', (req, res, next) => {
   res.send('GET /users/:id/clones');
