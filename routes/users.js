@@ -1,9 +1,19 @@
 let express = require('express');
 let router = express.Router();
 let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
 mongoose.connect(process.env.MONGODB_URI);
 
 let db = mongoose.connection;
+
+let cloneSchema = mongoose.Schema({
+  _creator: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  title: String
+});
+
 let userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -12,7 +22,8 @@ let userSchema = mongoose.Schema({
   email: {
     type: String,
     unique: true
-  }
+  },
+  clones: [cloneSchema]
 });
 
 userSchema.methods.foo = function () {
@@ -20,6 +31,7 @@ userSchema.methods.foo = function () {
 }
 
 let User = mongoose.model('User', userSchema);
+let Clone = mongoose.model('Clone', cloneSchema);
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {});
@@ -52,7 +64,9 @@ router.post('/', (req, res, next) => {
 
 // display a specific user
 router.get('/:id', (req, res, next) => {
-  User.find({name: req.params.id}, function (err, user) {
+  User.findOne({name: req.params.id})
+  .populate('clones')
+  .exec(function (err, user) {
     if (err) {
       res.send(err);
     } else {
@@ -93,12 +107,35 @@ router.delete('/:id', (req, res, next) => {
 
 // display a list of all clones for a user
 router.get('/:id/clones', (req, res, next) => {
-  res.send('GET /users/:id/clones');
+  User.findOne({name: req.params.id}, function (err, user) {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(user);
+    }
+  });
 });
 
 // create a new clone for a user
 router.post('/:id/clones', (req, res, next) => {
-  res.send('POST /users:id/clones');
+  User.findOne({name: req.params.id}, function (err, user) {
+    if (err) {
+      res.send(err);
+    } else {
+      let clone = new Clone({
+        title: req.body.title,
+        _creator: user._id
+      });
+
+      clone.save(function (err) {
+        if (err) {
+          res.send(err);
+        } else {
+          res.send(clone);
+        }
+      });
+    }
+  });
 });
 
 // display a specific clone for a user
