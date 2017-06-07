@@ -54,6 +54,25 @@ router.get('/:id/mqtt', (req, res, next) => {
   });
 });
 
+router.get('/elastic', (req, res, next) => {
+  let elasticsearch = require('elasticsearch');
+  let client = new elasticsearch.Client({
+    host: process.env.BOSAI_URL,
+    log: 'trace'
+  });
+  client.ping({
+  // ping usually has a 3000ms timeout
+    requestTimeout: 1000
+  }, function (error) {
+    if (error) {
+      console.trace('elasticsearch cluster is down!');
+    } else {
+      console.log('All is well');
+    }
+  });
+  res.send('elastic working!');
+});
+
 router.get('/sequelize', (req, res, next) => {
   const Sequelize = require('sequelize');
   const sequelize = new Sequelize(process.env.DATABASE_URL,
@@ -76,7 +95,7 @@ router.get('/sequelize', (req, res, next) => {
     }));
   });
 
-  res.send('healthy and happy');
+  res.send('sequelize working!');
 });
 
 module.exports = router;
