@@ -9,7 +9,7 @@ router.get('/', (req, res, next) => {
 /* GET clones listing. */
 router.get('/mongo', (req, res, next) => {
   let mongoose = require('mongoose');
-  mongoose.connect('mongodb://heroku_7vnbm5jl:ff0mfi48kbnm1o2v1s9qok0jci@ds015919.mlab.com:15919/heroku_7vnbm5jl');
+  mongoose.connect(process.env.MONGODB_URI);
   let db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function() {
