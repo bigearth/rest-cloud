@@ -1,8 +1,28 @@
 let express = require('express');
 let router = express.Router();
+let mongoose = require('mongoose');
 
 /* GET clones listing. */
 router.get('/', (req, res, next) => {
+  mongoose.connect(process.env.MONGODB_URI);
+  let db = mongoose.connection;
+  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('open', function() {
+    let cloneSchema = mongoose.Schema({
+        name: String
+    });
+    cloneSchema.methods.print = function () {
+      let gcode = 'G29';
+      console.log(gcode);
+    }
+
+    let Clone = mongoose.model('Clone', cloneSchema);
+    let c1a = new Clone({ name: 'c1a' });
+    c1a.save(function (err, c1a) {
+      if (err) return console.error(err);
+      c1a.print();
+    });
+  });
   res.send('');
 });
 
@@ -33,7 +53,6 @@ router.delete('/users/:id/clones/:id', (req, res, next) => {
 
 /* GET clones listing. */
 router.get('/mongo', (req, res, next) => {
-  let mongoose = require('mongoose');
   mongoose.connect(process.env.MONGODB_URI);
   let db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));

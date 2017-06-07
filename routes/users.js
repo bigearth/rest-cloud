@@ -1,19 +1,47 @@
 let express = require('express');
 let router = express.Router();
+let mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI);
+
+let db = mongoose.connection;
+let userSchema = mongoose.Schema({
+  name: String
+});
+
+userSchema.methods.foo = function () {
+  let foo = 'bar';
+}
+
+let User = mongoose.model('User', userSchema);
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+});
 
 // display list of all users
 router.get('/', (req, res, next) => {
-  res.send('GET /users');
+  User.find(function (err, users) {
+    if (err) return console.error(err);
+    res.send(users);
+  });
 });
 
 // create a new user
 router.post('/', (req, res, next) => {
-  res.send('POST /users');
+  let user = new User({ name: req.body.name });
+  user.save(function (err, user) {
+    if (err) return console.error(err);
+    res.send(user);
+  });
 });
 
 // display a specific user
 router.get('/:id', (req, res, next) => {
-  res.send('GET	/users/:id');
+  console.log('foobar', req.body.id);
+  User.find({name: req.body.id}, function (err, user) {
+    if (err) return console.error(err);
+    res.send(user);
+  });
 });
 
 // update a specific user
