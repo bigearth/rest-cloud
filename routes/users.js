@@ -15,8 +15,7 @@ userSchema.methods.foo = function () {
 let User = mongoose.model('User', userSchema);
 
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-});
+db.once('open', function() {});
 
 // display list of all users
 router.get('/', (req, res, next) => {
@@ -37,8 +36,7 @@ router.post('/', (req, res, next) => {
 
 // display a specific user
 router.get('/:id', (req, res, next) => {
-  console.log('foobar', req.body.id);
-  User.find({name: req.body.id}, function (err, user) {
+  User.find({name: req.params.id}, function (err, user) {
     if (err) return console.error(err);
     res.send(user);
   });
@@ -46,12 +44,26 @@ router.get('/:id', (req, res, next) => {
 
 // update a specific user
 router.put('/:id', (req, res, next) => {
-  res.send('PUT	/users/:id');
+  User.findOne({'name': req.params.id}, function (err, user) {
+    if (err) return handleError(err);
+    if(user) {
+      user.name = req.body.name;
+      user.save(function (err, updatedUser) {
+        if (err) return handleError(err);
+        res.send(updatedUser);
+      });
+    } else {
+      res.send({error: 'no user w/ name: ' + req.params.id});
+    }
+  });
 });
 
 // delete a specific user
 router.delete('/:id', (req, res, next) => {
-  res.send('DELETE /users/:id');
+  User.remove({ name: req.params.id }, function (err) {
+    if (err) return handleError(err);
+    res.send({success: req.params.id + ' has been deleted.'});
+  });
 });
 
 // display a list of all clones for a user
