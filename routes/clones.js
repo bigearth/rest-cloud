@@ -54,4 +54,29 @@ router.get('/:id/mqtt', (req, res, next) => {
   });
 });
 
+router.get('/sequelize', (req, res, next) => {
+  const Sequelize = require('sequelize');
+  const sequelize = new Sequelize(process.env.DATABASE_URL,
+  {
+    dialect: 'postgres',
+    dialectOptions: {
+      ssl: true
+    }
+  });
+  const Clone = sequelize.define('clone', {
+    name: Sequelize.STRING
+  });
+  sequelize.sync()
+  .then(() => Clone.create({
+    username: 'c1a'
+  }))
+  .then(clone => {
+    console.log(clone.get({
+      plain: true
+    }));
+  });
+
+  res.send('healthy and happy');
+});
+
 module.exports = router;
