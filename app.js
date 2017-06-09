@@ -10,6 +10,8 @@ let clones = require('./routes/clones');
 let users = require('./routes/users');
 
 let app = express();
+let cors = require('cors')
+app.use(cors())
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,8 +32,6 @@ app.use('/clones', clones);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   let err = new Error('Not Found');
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   err.status = 404;
   next(err);
 });
