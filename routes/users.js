@@ -15,7 +15,7 @@ let cloneSchema = mongoose.Schema({
 });
 
 let userSchema = mongoose.Schema({
-  name: {
+  userName: {
     type: String,
     unique: true
   },
@@ -50,7 +50,7 @@ router.get('/', (req, res, next) => {
 // create a new user
 router.post('/', (req, res, next) => {
   let user = new User({
-    name: req.body.name,
+    userName: req.body.userName,
     email: req.body.email
    });
   user.save(function (err, user) {
@@ -64,7 +64,7 @@ router.post('/', (req, res, next) => {
 
 // display a specific user
 router.get('/:id', (req, res, next) => {
-  User.findOne({name: req.params.id})
+  User.findOne({userName: req.params.id})
   .populate('clones')
   .exec(function (err, user) {
     if (err) {
@@ -77,18 +77,18 @@ router.get('/:id', (req, res, next) => {
 
 // update a specific user
 router.put('/:id', (req, res, next) => {
-  User.findOne({'name': req.params.id}, function (err, user) {
+  User.findOne({'userName': req.params.id}, function (err, user) {
     if (err) {
       res.send(err);
     } else {
       if(user) {
-        user.name = req.body.name;
+        user.userName = req.body.userName;
         user.save(function (err, updatedUser) {
           if (err) return handleError(err);
           res.send(updatedUser);
         });
       } else {
-        res.send({error: 'no user w/ name: ' + req.params.id});
+        res.send({error: 'no user w/ userName: ' + req.params.id});
       }
     }
   });
@@ -96,7 +96,7 @@ router.put('/:id', (req, res, next) => {
 
 // delete a specific user
 router.delete('/:id', (req, res, next) => {
-  User.remove({ name: req.params.id }, function (err) {
+  User.remove({ userName: req.params.id }, function (err) {
     if (err) {
       res.send(err);
     } else {
@@ -107,7 +107,7 @@ router.delete('/:id', (req, res, next) => {
 
 // display a list of all clones for a user
 router.get('/:id/clones', (req, res, next) => {
-  User.findOne({name: req.params.id}, function (err, user) {
+  User.findOne({userName: req.params.id}, function (err, user) {
     if (err) {
       res.send(err);
     } else {
@@ -118,7 +118,7 @@ router.get('/:id/clones', (req, res, next) => {
 
 // create a new clone for a user
 router.post('/:id/clones', (req, res, next) => {
-  User.findOne({name: req.params.id}, function (err, user) {
+  User.findOne({userName: req.params.id}, function (err, user) {
     if (err) {
       res.send(err);
     } else {
