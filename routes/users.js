@@ -82,7 +82,18 @@ router.put('/:id', (req, res, next) => {
       res.send(err);
     } else {
       if(user) {
-        user.userName = req.body.userName;
+        if(req.body.userName) {
+          user.userName = req.body.userName;
+        } else {
+          user.userName = user.userName;
+        }
+
+        if(req.body.email) {
+          user.email = req.body.email;
+        } else {
+          user.email = user.email;
+        }
+
         user.save(function (err, updatedUser) {
           if (err) return handleError(err);
           res.send(updatedUser);
