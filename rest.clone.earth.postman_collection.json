@@ -1,0 +1,116 @@
+{
+	"variables": [],
+	"info": {
+		"name": "rest.clone.earth",
+		"_postman_id": "dbc70453-b59e-93a7-893b-dca7cbf28e9b",
+		"description": "REST services for Clone.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "users",
+			"description": "CRUD services for user",
+			"item": [
+				{
+					"name": "http://rest-cloud-staging.herokuapp.com/users",
+					"request": {
+						"url": "{{URL}}/users",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": "`GET` all users"
+					},
+					"response": []
+				},
+				{
+					"name": "http://rest-cloud-staging.herokuapp.com/users copy",
+					"request": {
+						"url": "{{URL}}/users",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "userName",
+									"value": "gabriel+7",
+									"description": "",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "g+7@example.com",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "`POST` to create new users"
+					},
+					"response": []
+				},
+				{
+					"name": "http://rest-cloud-staging.herokuapp.com/users copy",
+					"request": {
+						"url": "{{URL}}/users/{{id}}",
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"description": "`GET` all users"
+					},
+					"response": []
+				},
+				{
+					"name": "http://rest-cloud-staging.herokuapp.com/users copy copy",
+					"request": {
+						"url": "{{URL}}/users/{{id}}",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "g+77@example.com",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": "`GET` all users"
+					},
+					"response": []
+				},
+				{
+					"name": "http://rest-cloud-staging.herokuapp.com/users copy copy copy",
+					"request": {
+						"url": "{{URL}}/users/{{id}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "`GET` all users"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
