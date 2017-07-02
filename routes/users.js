@@ -7,10 +7,10 @@ mongoose.connect(process.env.MONGODB_URI);
 let db = mongoose.connection;
 
 let cloneSchema = mongoose.Schema({
-  _creator: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  },
+  title: String
+});
+
+let designSchema = mongoose.Schema({
   title: String
 });
 
@@ -23,7 +23,8 @@ let userSchema = mongoose.Schema({
     type: String,
     unique: true
   },
-  clones: [cloneSchema]
+  clones: [cloneSchema],
+  designs: [designSchema]
 });
 
 userSchema.methods.foo = function () {
@@ -31,7 +32,7 @@ userSchema.methods.foo = function () {
 }
 
 let User = mongoose.model('User', userSchema);
-let Clone = mongoose.model('Clone', cloneSchema);
+// let Clone = mongoose.model('Clone', cloneSchema);
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {});
@@ -52,7 +53,10 @@ router.post('/', (req, res, next) => {
   let user = new User({
     userName: req.body.userName,
     email: req.body.email
-   });
+  });
+  user.clones.push({ title: 'My Clone' });
+  user.designs.push({ title: 'My amazing .stl file' });
+
   user.save(function (err, user) {
     if (err) {
       res.send(err);

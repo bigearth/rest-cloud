@@ -5,6 +5,8 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 
+require('dotenv').config()
+
 let index = require('./routes/index');
 let clones = require('./routes/clones');
 let users = require('./routes/users');
