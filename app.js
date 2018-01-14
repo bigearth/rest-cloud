@@ -10,6 +10,7 @@ require('dotenv').config()
 let index = require('./routes/index');
 let clones = require('./routes/clones');
 let users = require('./routes/users');
+let healthCheck = require('./routes/health-check');
 
 let app = express();
 let cors = require('cors')
@@ -28,8 +29,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
-app.use('/clones', clones);
+app.use('/health-check', healthCheck);
+// app.use('/users', users);
+// app.use('/clones', clones);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
