@@ -28,8 +28,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+let prefix = 'v1';
 app.use('/', index);
-app.use('/health-check', healthCheck);
+app.use('/' + prefix + '/' + 'health-check', healthCheck);
 // app.use('/users', users);
 // app.use('/clones', clones);
 
