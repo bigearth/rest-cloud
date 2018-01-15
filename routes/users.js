@@ -6,25 +6,38 @@ mongoose.connect(process.env.MONGODB_URI);
 
 let db = mongoose.connection;
 
-let cloneSchema = mongoose.Schema({
-  title: String
-});
-
-let designSchema = mongoose.Schema({
-  title: String
-});
+// let cloneSchema = mongoose.Schema({
+//   title: String
+// });
+//
+// let designSchema = mongoose.Schema({
+//   title: String
+// });
 
 let userSchema = mongoose.Schema({
-  userName: {
+  username: {
     type: String,
     unique: true
+  },
+  firstName: {
+    type: String
+  },
+  lastName: {
+    type: String
   },
   email: {
     type: String,
     unique: true
   },
-  clones: [cloneSchema],
-  designs: [designSchema]
+  password: {
+    type: String
+  },
+  phone: {
+    type: String,
+    unique: true
+  },
+  // clones: [cloneSchema],
+  // designs: [designSchema]
 });
 
 userSchema.methods.foo = function () {
@@ -39,6 +52,7 @@ db.once('open', function() {});
 
 // display list of all users
 router.get('/', (req, res, next) => {
+  // res.json({ status: 'getting users' });
   User.find(function (err, users) {
     if (err) {
       res.send(err);
@@ -51,12 +65,16 @@ router.get('/', (req, res, next) => {
 // create a new user
 router.post('/', (req, res, next) => {
   let user = new User({
-    userName: req.body.userName,
-    email: req.body.email
+    username: req.body.username,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,
+    password: req.body.password,
+    phone: req.body.phone
   });
-  user.clones.push({ title: 'My Clone' });
-  user.designs.push({ title: 'My amazing .stl file' });
-
+  // user.clones.push({ title: 'My Clone' });
+  // user.designs.push({ title: 'My amazing .stl file' });
+  //
   user.save(function (err, user) {
     if (err) {
       res.send(err);
@@ -66,10 +84,9 @@ router.post('/', (req, res, next) => {
   });
 });
 
-// display a specific user
-router.get('/:id', (req, res, next) => {
-  User.findOne({userName: req.params.id})
-  .populate('clones')
+// display a specific user by username
+router.get('/:username', (req, res, next) => {
+  User.findOne({username: req.params.username})
   .exec(function (err, user) {
     if (err) {
       res.send(err);
@@ -80,20 +97,44 @@ router.get('/:id', (req, res, next) => {
 });
 
 // update a specific user
-router.put('/:id', (req, res, next) => {
-  User.findOne({'userName': req.params.id}, function (err, user) {
+router.put('/:username', (req, res, next) => {
+  User.findOne({'username': req.params.username}, function (err, user) {
     if (err) {
       res.send(err);
     } else {
       if(user) {
-        if(req.body.userName) {
-          user.userName = req.body.userName;
+        if(req.params.username) {
+          user.username = req.params.username;
         } else {
           user.userName = user.userName;
         }
 
-        if(req.body.email) {
-          user.email = req.body.email;
+        if(req.params.firstName) {
+          user.firstName = req.params.firstName;
+        } else {
+          user.firstName = user.firstName;
+        }
+
+        if(req.params.lastName) {
+          user.lastName = req.params.lastName;
+        } else {
+          user.lastName = user.lastName;
+        }
+
+        if(req.params.password) {
+          user.password = req.params.password;
+        } else {
+          user.password = user.password;
+        }
+
+        if(req.params.phone) {
+          user.phone = req.params.phone;
+        } else {
+          user.phone = user.phone;
+        }
+
+        if(req.params.email) {
+          user.email = req.params.email;
         } else {
           user.email = user.email;
         }
@@ -103,19 +144,19 @@ router.put('/:id', (req, res, next) => {
           res.send(updatedUser);
         });
       } else {
-        res.send({error: 'no user w/ userName: ' + req.params.id});
+        res.send({error: 'no user w/ username: ' + req.params.username});
       }
     }
   });
 });
 
 // delete a specific user
-router.delete('/:id', (req, res, next) => {
-  User.remove({ userName: req.params.id }, function (err) {
+router.delete('/:username', (req, res, next) => {
+  User.remove({ username: req.params.username }, function (err) {
     if (err) {
       res.send(err);
     } else {
-      res.send({success: req.params.id + ' has been deleted.'});
+      res.send({success: req.params.username + ' has been deleted.'});
     }
   });
 });

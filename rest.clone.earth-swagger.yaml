@@ -1,0 +1,640 @@
+swagger: "2.0"
+info:
+  description: "rest.clone.earth is the backend for the my.clone.earth marketplace."
+  version: "0.1.1"
+  title: "rest.clone.earth API documentation"
+  contact:
+    email: "contact@clone.earth"
+  license:
+    name: "MIT"
+    url: "https://opensource.org/licenses/MIT"
+host: "staging-rest.clone.earth"
+basePath: "/v1"
+schemes:
+- "http"
+- "https"
+tags:
+- name: "health-check"
+  description: "system health check"
+- name: "users"
+  description: "Operations about User. User has many clones, projects and designs"
+- name: "clones"
+  description: "Operations about Clone. Clone belongs to User"
+- name: "projects"
+  description: "Operations about Project. Project belongs to User"
+- name: "designs"
+  description: "Operations about Design. Design belongs to User"
+  # externalDocs:
+  #   description: "Find out more about Clone"
+  #   url: "https://www.clone.earth"
+externalDocs:
+  description: "Find out more about Clone"
+  url: "https://www.clone.earth"
+paths:
+  /health-check:
+    get:
+      tags:
+      - "health-check"
+      summary: "health check"
+      description: "Check the status of the system as a whole"
+      operationId: "healthCheck"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/HealthCheck"
+  /users:
+    get:
+      tags:
+      - "users"
+      summary: "list all users"
+      description: "display a list of all users"
+      operationId: "listUsers"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/User"
+    post:
+      tags:
+      - "users"
+      summary: "create User"
+      description: "Create a new User"
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        default:
+          description: "successful operation"
+        400:
+          description: "Invalid user object supplied"
+  /users/{username}:
+    get:
+      tags:
+      - "users"
+      summary: "Get user by username"
+      description: ""
+      operationId: "getUserByUsername"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The username that needs to be fetched."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+      # deprecated: true
+    put:
+      tags:
+      - "users"
+      summary: "Updated user"
+      description: "This can only be done by the logged in user."
+      operationId: "updateUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "username that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated user object"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        400:
+          description: "Invalid user supplied"
+        404:
+          description: "User not found"
+    delete:
+      tags:
+      - "users"
+      summary: "Delete user"
+      description: "This can only be done by the logged in user."
+      operationId: "deleteUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The username that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid id supplied"
+        404:
+          description: "User not found"
+  /users/login:
+    post:
+      tags:
+      - "users"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "string"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+        400:
+          description: "Invalid username/password supplied"
+  /users/logout:
+    post:
+      tags:
+      - "users"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+  /clones:
+    get:
+      tags:
+      - "clones"
+      summary: "list all users clones"
+      description: "display a list of all clones"
+      operationId: "listClones"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Clone"
+    post:
+      tags:
+      - "clones"
+      summary: "create Clone"
+      description: "Create a new Clone"
+      operationId: "createClone"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created clone object"
+        required: true
+        schema:
+          $ref: "#/definitions/Clone"
+      responses:
+        default:
+          description: "successful operation"
+        400:
+          description: "Invalid clone object supplied"
+  /clones/{id}:
+    get:
+      tags:
+      - "clones"
+      summary: "Get clone by id"
+      description: ""
+      operationId: "getCloneById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id that needs to be fetched."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Clone"
+        400:
+          description: "Invalid id supplied"
+        404:
+          description: "Clone not found"
+    put:
+      tags:
+      - "clones"
+      summary: "Updated clone"
+      description: ""
+      operationId: "updateClone"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id that need to be updated"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated clone object"
+        required: true
+        schema:
+          $ref: "#/definitions/Clone"
+      responses:
+        400:
+          description: "Invalid clone supplied"
+        404:
+          description: "Clone not found"
+    delete:
+      tags:
+      - "clones"
+      summary: "Delete clone"
+      description: ""
+      operationId: "deleteClone"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id that needs to be deleted"
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid id supplied"
+        404:
+          description: "Clone not found"
+  /users/{id}/projects:
+    get:
+      tags:
+      - "projects"
+      summary: "list all projects"
+      description: "display all of a user's projects"
+      operationId: "listProjects"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id of the User."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Project"
+    post:
+      tags:
+      - "projects"
+      summary: "create Project"
+      description: "Create a new Project"
+      operationId: "createProject"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id of the User."
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Created Projects object"
+        required: true
+        schema:
+          $ref: "#/definitions/Project"
+      responses:
+        default:
+          description: "successful operation"
+        400:
+          description: "Invalid Project object supplied"
+  /users/{id}/projects/{projectId}:
+    get:
+      tags:
+      - "projects"
+      summary: "Get project by id"
+      description: ""
+      operationId: "getProjectById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id of the User."
+        required: true
+        type: "string"
+      - name: "projectId"
+        in: "path"
+        description: "The id of the Project."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Project"
+        400:
+          description: "Invalid id or projectId supplied"
+        404:
+          description: "Project not found"
+    put:
+      tags:
+      - "projects"
+      summary: "Updated project"
+      description: ""
+      operationId: "updateProject"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id that need to be updated"
+        required: true
+        type: "string"
+      - name: "projectId"
+        in: "path"
+        description: "The id of the Project."
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated project object"
+        required: true
+        schema:
+          $ref: "#/definitions/Project"
+      responses:
+        400:
+          description: "Invalid project supplied"
+        404:
+          description: "Project not found"
+    delete:
+      tags:
+      - "projects"
+      summary: "Delete project"
+      description: ""
+      operationId: "deleteProject"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id that needs to be deleted"
+        required: true
+        type: "string"
+      - name: "projectId"
+        in: "path"
+        description: "The id of the Project."
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid id supplied"
+        404:
+          description: "Project not found"
+  /users/{id}/designs:
+    get:
+      tags:
+      - "designs"
+      summary: "list all designs"
+      description: "display all of a user's designs"
+      operationId: "listDesigns"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id of the User."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Design"
+    post:
+      tags:
+      - "designs"
+      summary: "create Design"
+      description: "Create a new Design"
+      operationId: "createDesign"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id of the User."
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Created Design object"
+        required: true
+        schema:
+          $ref: "#/definitions/Design"
+      responses:
+        default:
+          description: "successful operation"
+        400:
+          description: "Invalid Design object supplied"
+  /users/{id}/designs/{designId}:
+    get:
+      tags:
+      - "designs"
+      summary: "Get design by id"
+      description: ""
+      operationId: "getDesignById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id of the User."
+        required: true
+        type: "string"
+      - name: "designId"
+        in: "path"
+        description: "The id of the Design."
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Design"
+        400:
+          description: "Invalid id or designId supplied"
+        404:
+          description: "Design not found"
+    put:
+      tags:
+      - "designs"
+      summary: "Updated design"
+      description: ""
+      operationId: "updateDesign"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "id that need to be updated"
+        required: true
+        type: "string"
+      - name: "designId"
+        in: "path"
+        description: "The id of the Design."
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Updated design object"
+        required: true
+        schema:
+          $ref: "#/definitions/Design"
+      responses:
+        400:
+          description: "Invalid design supplied"
+        404:
+          description: "Design not found"
+    delete:
+      tags:
+      - "designs"
+      summary: "Delete design"
+      description: ""
+      operationId: "deleteDesign"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "The id that needs to be deleted"
+        required: true
+        type: "string"
+      - name: "designId"
+        in: "path"
+        description: "The id of the Design."
+        required: true
+        type: "string"
+      responses:
+        400:
+          description: "Invalid id supplied"
+        404:
+          description: "Design not found"
+# securityDefinitions:
+#   petstore_auth:
+#    type: "oauth2"
+#    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+#    flow: "implicit"
+#    scopes:
+#      write:pets: "modify pets in your account"
+#      read:pets: "read your pets"
+#  api_key:
+#    type: "apiKey"
+#    name: "api_key"
+#    in: "header"
+definitions:
+  HealthCheck:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+        default: "winning"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      firstName:
+        type: "string"
+      lastName:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      phone:
+        type: "string"
+  Clone:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      userId:
+        type: "integer"
+        format: "int64"
+        description: "Id of owner"
+      title:
+        type: "string"
+  Project:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      userId:
+        type: "integer"
+        format: "int64"
+        description: "Id of owner"
+      title:
+        type: "string"
+  Design:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      userId:
+        type: "integer"
+        format: "int64"
+        description: "Id of owner"
+      title:
+        type: "string"

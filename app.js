@@ -31,7 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 let prefix = 'v1';
 app.use('/', index);
 app.use('/' + prefix + '/' + 'health-check', healthCheck);
-// app.use('/users', users);
+app.use('/' + prefix + '/' + 'users', users);
 // app.use('/clones', clones);
 
 // catch 404 and forward to error handler
