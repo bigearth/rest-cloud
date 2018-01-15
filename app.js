@@ -4,6 +4,7 @@ let favicon = require('serve-favicon');
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
+let basicAuth = require('express-basic-auth')
 
 require('dotenv').config()
 
@@ -27,6 +28,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//
+// let username = process.env.USERNAME;
+// let password = process.env.PASSWORD;
+//
+// app.use(basicAuth(
+//   {
+//     users: { username: password }
+//   }
+// ));
 
 let prefix = 'v1';
 app.use('/', index);

@@ -565,18 +565,16 @@ paths:
           description: "Invalid id supplied"
         404:
           description: "Design not found"
-# securityDefinitions:
-#   petstore_auth:
-#    type: "oauth2"
-#    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
-#    flow: "implicit"
-#    scopes:
-#      write:pets: "modify pets in your account"
-#      read:pets: "read your pets"
-#  api_key:
-#    type: "apiKey"
-#    name: "api_key"
-#    in: "header"
+
+# components:
+#   securitySchemes:
+#     basicAuth:     # <-- arbitrary name for the security scheme
+#       type: http
+#       scheme: basic
+#
+# security:
+#   - basicAuth: []  # <-- use the same name here
+#
 definitions:
   HealthCheck:
     type: "object"
